@@ -8,6 +8,11 @@ namespace NativeCredentialStore;
 public interface INativeCredentialStore
 {
   /// <summary>
+  /// Path to where the docker-credential-helper executable lives.
+  /// </summary>
+  string ExecutableFilePath { get; }
+
+  /// <summary>
   /// Store <paramref name="credentials"/> in the native credential store.
   /// </summary>
   /// <param name="credentials">Crednetials to be stored.</param>

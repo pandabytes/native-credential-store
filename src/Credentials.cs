@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace NativeCredentialStore;
 
-public sealed class Credentials
+public sealed record Credentials
 {
   private static readonly JsonSerializerOptions JsonOptions = new()
   {
@@ -55,11 +55,6 @@ public sealed class Credentials
       _secret = value;
     }
   }
-
-  public override string ToString()
-    => $"{nameof(ServerURL)}={ServerURL};" +
-       $"{nameof(Username)}={Username};" +
-       $"{nameof(Secret)}={Secret};";
 
   public string ToJson() => JsonSerializer.Serialize(this, JsonOptions);
 

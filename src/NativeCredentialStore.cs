@@ -12,6 +12,8 @@ internal sealed class NativeCredentialStore : INativeCredentialStore
     _filePath = credentialHelperExe.ExecutableFilePath;
   }
 
+  public string ExecutableFilePath => _filePath;
+
   public async Task StoreAsync(Credentials credentials, CancellationToken cancellationToken)
   {
     var commandResult = await ExecuteCommandAsync(Command.Store, credentials.ToJson(), cancellationToken);
@@ -23,6 +25,11 @@ internal sealed class NativeCredentialStore : INativeCredentialStore
 
   public async Task<Credentials> GetAsync(string serverURL, CancellationToken cancellationToken)
   {
+    if (string.IsNullOrWhiteSpace(serverURL))
+    {
+      throw new ArgumentException($"{nameof(serverURL)} cannot be empty.");
+    }
+
     var commandResult = await ExecuteCommandAsync(Command.Get, serverURL, cancellationToken);
     if (commandResult.ExitCode != 0)
     {
@@ -34,6 +41,11 @@ internal sealed class NativeCredentialStore : INativeCredentialStore
 
   public async Task EraseAsync(string serverURL, CancellationToken cancellationToken)
   {
+    if (string.IsNullOrWhiteSpace(serverURL))
+    {
+      throw new ArgumentException($"{nameof(serverURL)} cannot be empty.");
+    }
+
     var commandResult = await ExecuteCommandAsync(Command.Erase, serverURL, cancellationToken);
     if (commandResult.ExitCode != 0)
     {
