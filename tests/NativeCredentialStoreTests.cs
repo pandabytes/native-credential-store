@@ -22,7 +22,7 @@ public class NativeCredentialStoreTests : IAsyncLifetime
     var serviceProvider = new ServiceCollection()
       .AddCredentialStore()
       .BuildServiceProvider();
-    
+
     _credentialStore = serviceProvider.GetRequiredService<INativeCredentialStore>();
   }
 

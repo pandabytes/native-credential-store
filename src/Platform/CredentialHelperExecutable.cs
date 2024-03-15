@@ -54,8 +54,9 @@ public sealed class CredentialHelperExecutable
     if (!IsValid())
     {
       throw new ArgumentException("Unable to find executable given the combination of " +
-                                  "credential service, OS platform, and OS architecture. " +
-                                  $"Can't file file {ExecutableName}.");
+                                  $"credential service ({CredentialService}), " +
+                                  $"OS platform ({OsPlatform}), and OS architecture ({OsArchitecture}). " +
+                                  $"Can't find executable file {ExecutableName}.");
     }
   }
 
