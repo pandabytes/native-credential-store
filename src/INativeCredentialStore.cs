@@ -25,6 +25,7 @@ public interface INativeCredentialStore
   /// </summary>
   /// <param name="serverURL">Server url.</param>
   /// <param name="cancellationToken">Cancel token.</param>
+  /// <exception cref="ArgumentException"/>
   /// <exception cref="CommandException"/>
   /// <returns>Credentials object.</returns>
   Task<Credentials> GetAsync(string serverURL, CancellationToken cancellationToken = default);
@@ -34,6 +35,7 @@ public interface INativeCredentialStore
   /// </summary>
   /// <param name="serverURL">Server url.</param>
   /// <param name="cancellationToken">Cancel token.</param>
+  /// <exception cref="ArgumentException"/>
   /// <exception cref="CommandException"/>
   Task EraseAsync(string serverURL, CancellationToken cancellationToken = default);
 
