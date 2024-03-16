@@ -3,7 +3,6 @@ using static NativeCredentialStore.CredentialStoreFactory;
 
 namespace IntegrationTests.NativeCredentialStore;
 
-[Trait("Platform", "Mac")]
 public class NativeCredentialStoreFactoryTests
 {
   [Fact]
@@ -17,6 +16,7 @@ public class NativeCredentialStoreFactoryTests
     Assert.True(File.Exists(credentialStore.ExecutableFilePath));
   }
 
+  [Trait("Platform", "Mac")]
   [Fact]
   public void GetCredentialStore_WrongOsArchictecture_ThrowsException()
   {
@@ -24,6 +24,7 @@ public class NativeCredentialStoreFactoryTests
       => GetCredentialStore(osArchitecture: OsArchitecture.Ppc64le));
   }
 
+  [Trait("Platform", "Mac")]
   [Fact]
   public void GetCredentialStore_WrongCredentialService_ThrowsException()
   {
