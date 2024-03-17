@@ -1,0 +1,20 @@
+name: CI for NativeCredentialStore
+
+on: [push, pull_request]
+
+jobs:
+  macos-call-dotnet-workflow:
+    name: Build on Mac
+    uses: pandabytes/native-credential-store/.github/workflows/dotnet-build-test.yml@github-action
+    with:
+      runs_on: macOS-latest
+
+  windows-call-dotnet-workflow:
+    name: Build on Windows
+    # strategy:
+    #   matrix:
+    #     year: ["2019", "2022"]
+    uses: pandabytes/native-credential-store/.github/workflows/dotnet-build-test.yml@github-action
+    with:
+      runs_on: windows-latest
+      # runs_on: windows-${{ matrix.year }}
