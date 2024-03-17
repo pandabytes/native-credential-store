@@ -98,9 +98,9 @@ public class NativeCredentialStoreTests : IAsyncLifetime
   }
 
   [InlineData(0)]
-  // [InlineData(1)]
-  // [InlineData(5)]
-  // [InlineData(10)]
+  [InlineData(1)]
+  [InlineData(5)]
+  [InlineData(10)]
   [Theory]
   public async Task ListAsync_CheckStoredCredentials_CountMatch(int count)
   {
@@ -117,17 +117,20 @@ public class NativeCredentialStoreTests : IAsyncLifetime
     }
 
     // Act
-    var credentials = await _credentialStore.ListAsync();
+    // This may return additional credentials that were
+    // setup by build environment (like github actions)
+    // so we need to filter those out
+    IDictionary<string, string> credentials = (await _credentialStore.ListAsync())
+      .Where(pair => pair.Key.StartsWith(Credential.ServerURL))
+      .ToDictionary(pair => pair.Key, pair => pair.Value);
 
     // Assert
-    var k = credentials.Keys.First();
-    Assert.Equal("", $"{k}: {credentials[k]}");
-    // Assert.Equal(count, credentials.Count);
+    Assert.Equal(count, credentials.Count);
 
-    // foreach (var credential in credentialObjs)
-    // {
-    //   Assert.Contains(credential.ServerURL, credentials);
-    //   Assert.Equal(credential.Username, credentials[credential.ServerURL]);
-    // }
+    foreach (var credential in credentialObjs)
+    {
+      Assert.Contains(credential.ServerURL, credentials);
+      Assert.Equal(credential.Username, credentials[credential.ServerURL]);
+    }
   }
 }
