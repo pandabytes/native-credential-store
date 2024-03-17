@@ -8,11 +8,11 @@ jobs:
     uses: pandabytes/native-credential-store/.github/workflows/dotnet-build-test.yml@github-action
     with:
       runs_on: macOS-latest
-      test_filter: "Platform=All|Platform=MacOS"
+      test_filter: "\"Platform=All|Platform=MacOS\""
 
   windows-call-dotnet-workflow:
     name: Build on Windows
     uses: pandabytes/native-credential-store/.github/workflows/dotnet-build-test.yml@github-action
     with:
       runs_on: windows-latest
-      test_filter: "Platform=All|Platform=Windows"
+      test_filter: "\"Platform=All|Platform=Windows\""
