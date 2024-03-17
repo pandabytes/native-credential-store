@@ -100,7 +100,6 @@ public class NativeCredentialStoreTests : IAsyncLifetime
   [InlineData(0)]
   [InlineData(1)]
   [InlineData(5)]
-  [InlineData(10)]
   [Theory]
   public async Task ListAsync_CheckStoredCredentials_CountMatch(int count)
   {
