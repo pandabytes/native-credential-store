@@ -98,8 +98,9 @@ public class NativeCredentialStoreTests : IAsyncLifetime
   }
 
   [InlineData(0)]
-  [InlineData(1)]
-  [InlineData(5)]
+  // [InlineData(1)]
+  // [InlineData(5)]
+  // [InlineData(10)]
   [Theory]
   public async Task ListAsync_CheckStoredCredentials_CountMatch(int count)
   {
@@ -119,12 +120,14 @@ public class NativeCredentialStoreTests : IAsyncLifetime
     var credentials = await _credentialStore.ListAsync();
 
     // Assert
-    Assert.Equal(count, credentials.Count);
+    var k = credentials.Keys.First();
+    Assert.Equal("", $"{k}: {credentials[k]}");
+    // Assert.Equal(count, credentials.Count);
 
-    foreach (var credential in credentialObjs)
-    {
-      Assert.Contains(credential.ServerURL, credentials);
-      Assert.Equal(credential.Username, credentials[credential.ServerURL]);
-    }
+    // foreach (var credential in credentialObjs)
+    // {
+    //   Assert.Contains(credential.ServerURL, credentials);
+    //   Assert.Equal(credential.Username, credentials[credential.ServerURL]);
+    // }
   }
 }

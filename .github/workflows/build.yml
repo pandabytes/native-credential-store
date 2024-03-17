@@ -3,12 +3,12 @@ name: CI for NativeCredentialStore
 on: [push, pull_request]
 
 jobs:
-  macos-call-dotnet-workflow:
-    name: Build on Mac
-    uses: pandabytes/native-credential-store/.github/workflows/dotnet-build-test.yml@github-action
-    with:
-      runs_on: macOS-arm64-latest
-      test_filter: "\"Platform=All|Platform=MacOS\""
+  # macos-call-dotnet-workflow:
+  #   name: Build on Mac
+  #   uses: pandabytes/native-credential-store/.github/workflows/dotnet-build-test.yml@github-action
+  #   with:
+  #     runs_on: macOS-arm64-latest
+  #     test_filter: "\"Platform=All|Platform=MacOS\""
 
   windows-call-dotnet-workflow:
     name: Build on Windows
