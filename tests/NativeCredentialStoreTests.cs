@@ -2,6 +2,7 @@ using Xunit.Abstractions;
 
 namespace IntegrationTests.NativeCredentialStore;
 
+[PlatformTrait(Platform.All)]
 public class NativeCredentialStoreTests : IAsyncLifetime
 {
   private readonly INativeCredentialStore _credentialStore;

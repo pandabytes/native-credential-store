@@ -5,6 +5,7 @@ namespace IntegrationTests.NativeCredentialStore;
 
 public class NativeCredentialStoreFactoryTests
 {
+  [PlatformTrait(Platform.All)]
   [Fact]
   public void GetCredentialStore_DefaultArguments_ReturnsCredentialStore()
   {
@@ -16,19 +17,35 @@ public class NativeCredentialStoreFactoryTests
     Assert.True(File.Exists(credentialStore.ExecutableFilePath));
   }
 
-  [Trait("Platform", "Mac")]
+  [PlatformTrait(Platform.MacOS)]
   [Fact]
-  public void GetCredentialStore_WrongOsArchictecture_ThrowsException()
+  public void GetCredentialStore_WrongOsArchictectureOnMac_ThrowsException()
   {
     Assert.Throws<ArgumentException>(() 
       => GetCredentialStore(osArchitecture: OsArchitecture.Ppc64le));
   }
 
-  [Trait("Platform", "Mac")]
+  [PlatformTrait(Platform.MacOS)]
   [Fact]
-  public void GetCredentialStore_WrongCredentialService_ThrowsException()
+  public void GetCredentialStore_WrongCredentialServiceOnMac_ThrowsException()
   {
     Assert.Throws<ArgumentException>(() 
       => GetCredentialStore(credentialService: CredentialService.WindowsCredential));
+  }
+
+  [PlatformTrait(Platform.Windows)]
+  [Fact]
+  public void GetCredentialStore_WrongOsArchictectureOnWindows_ThrowsException()
+  {
+    Assert.Throws<ArgumentException>(() 
+      => GetCredentialStore(osArchitecture: OsArchitecture.Ppc64le));
+  }
+
+  [PlatformTrait(Platform.Windows)]
+  [Fact]
+  public void GetCredentialStore_WrongCredentialServiceOnWindows_ThrowsException()
+  {
+    Assert.Throws<ArgumentException>(() 
+      => GetCredentialStore(credentialService: CredentialService.Keychain));
   }
 }
