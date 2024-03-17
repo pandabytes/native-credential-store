@@ -9,7 +9,7 @@ public class NativeCredentialStoreTests : IAsyncLifetime
 
   private static readonly Credentials Credential = new()
   {
-    ServerURL = "http://localhost",
+    ServerURL = "http://nativecredentialstore.com",
     Username = "foo@email.com",
     Secret = "password"
   };
