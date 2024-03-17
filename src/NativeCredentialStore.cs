@@ -5,14 +5,14 @@ namespace NativeCredentialStore;
 
 internal sealed class NativeCredentialStore : INativeCredentialStore
 {
-  private readonly string _filePath;
+  private readonly CredentialHelperExecutable _credHelperExe;
 
   public NativeCredentialStore(CredentialHelperExecutable credentialHelperExe)
   {
-    _filePath = credentialHelperExe.ExecutableFilePath;
+    _credHelperExe = credentialHelperExe;
   }
 
-  public string ExecutableFilePath => _filePath;
+  public string ExecutableFilePath => _credHelperExe.ExecutableFilePath;
 
   public async Task StoreAsync(Credentials credentials, CancellationToken cancellationToken)
   {
@@ -47,8 +47,21 @@ internal sealed class NativeCredentialStore : INativeCredentialStore
     }
 
     var commandResult = await ExecuteCommandAsync(Command.Erase, serverURL, cancellationToken);
-    if (commandResult.ExitCode != 0)
+    var (exitCode, output, error) = commandResult;
+
+    if (exitCode != 0)
     {
+      // OSX keychain throws an exception if the serverURL is not found
+      // whereas windows credential doesn't. So to make it idempotent
+      // on OSX we ignore error that has to do with "not found" message
+      var isKeyChain = _credHelperExe.CredentialService == CredentialService.Keychain;
+      var hasNotFoundMessage = output.Contains("not found", StringComparison.OrdinalIgnoreCase) ||
+                               error.Contains("not found", StringComparison.OrdinalIgnoreCase);
+
+      if (isKeyChain && hasNotFoundMessage)
+      {
+        return;
+      }
       throw new CommandException(Command.Erase, commandResult);
     }
   }
@@ -75,7 +88,7 @@ internal sealed class NativeCredentialStore : INativeCredentialStore
     {
       StartInfo = new()
       {
-        FileName = _filePath,
+        FileName = ExecutableFilePath,
         Arguments = command,
         RedirectStandardOutput = true,
         RedirectStandardError = true,

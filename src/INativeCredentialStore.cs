@@ -14,6 +14,7 @@ public interface INativeCredentialStore
 
   /// <summary>
   /// Store <paramref name="credentials"/> in the native credential store.
+  /// This method can also be used to update an existing <paramref name="credentials"/>.
   /// </summary>
   /// <param name="credentials">Crednetials to be stored.</param>
   /// <param name="cancellationToken">Cancel token.</param>
@@ -22,6 +23,8 @@ public interface INativeCredentialStore
 
   /// <summary>
   /// Get the credentials given <paramref name="serverURL"/>.
+  /// This method throws an exception when <paramref name="serverURL"/>
+  /// doesn't exist.
   /// </summary>
   /// <param name="serverURL">Server url.</param>
   /// <param name="cancellationToken">Cancel token.</param>
@@ -32,6 +35,8 @@ public interface INativeCredentialStore
 
   /// <summary>
   /// Erase the credentials given <paramref name="serverURL"/>.
+  /// This method is idempotent, meaning if the <paramref name="serverURL"/>
+  /// doesn't exist, it will not throw an exception.
   /// </summary>
   /// <param name="serverURL">Server url.</param>
   /// <param name="cancellationToken">Cancel token.</param>

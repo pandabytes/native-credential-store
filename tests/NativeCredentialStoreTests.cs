@@ -79,8 +79,8 @@ public class NativeCredentialStoreTests : IAsyncLifetime
     => await Assert.ThrowsAsync<ArgumentException>(() => _credentialStore.EraseAsync(string.Empty));
 
   [Fact]
-  public async Task EraseAsync_ServerUrlNotExist_ThrowsException()
-    => await Assert.ThrowsAsync<CommandException>(() => _credentialStore.EraseAsync("foo"));
+  public async Task EraseAsync_ServerUrlNotExist_NothingHappens()
+    => await _credentialStore.EraseAsync("foo");
 
   [Fact]
   public async Task EraseAsync_ServerUrlExists_CredentialIsRemoved()
