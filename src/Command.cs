@@ -1,6 +1,6 @@
 namespace NativeCredentialStore;
 
-internal record CommandResult(int ExitCode, string Output, string Error);
+internal record CommandResult(int ExitCode, string Output, string Error, string ExePath);
 
 internal sealed class Command : StringEnum
 {

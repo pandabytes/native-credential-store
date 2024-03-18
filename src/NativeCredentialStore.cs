@@ -47,7 +47,7 @@ internal sealed class NativeCredentialStore : INativeCredentialStore
     }
 
     var commandResult = await ExecuteCommandAsync(Command.Erase, serverURL, cancellationToken);
-    var (exitCode, output, error) = commandResult;
+    var (exitCode, output, error, _) = commandResult;
 
     if (exitCode != 0)
     {
@@ -115,6 +115,6 @@ internal sealed class NativeCredentialStore : INativeCredentialStore
 
     var output = process.StandardOutput.ReadToEnd().Trim();
     var error = process.StandardError.ReadToEnd().Trim();
-    return new CommandResult(process.ExitCode, output, error);
+    return new CommandResult(process.ExitCode, output, error, ExecutableFilePath);
   }
 }
