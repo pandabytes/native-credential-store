@@ -31,18 +31,7 @@ jobs:
       - name: Install gpg and pass
         run: sudo apt-get update && sudo apt install gpg pass -y
       - name: Generate GPG key
-        run: >
-          gpg --batch --generate-key <<EOF
-              Key-Type: default
-              Key-Length: 2048
-              Subkey-Type: default
-              Subkey-Length: 2048
-              Name-Real: John Doe
-              Name-Email: johndoe@gmail.com
-              Expire-Date: 0
-              Passphrase: foo
-              %commit
-          EOF
+        run: gpg --batch --passphrase '' --quick-gen-key johndoe default default
       - name: Get GPG id
         # sed is to grab the 2nd line
         # xargs is to trim whitespace
@@ -52,7 +41,22 @@ jobs:
       - name: Add docker credential to pass
         run: >
           for file in $(find src/contentFiles -type f); do
+            echo "pass inserting $file"
             echo "pass is initialized" | pass insert --echo $file
           done
+      - name: Build test project
+        run: dotnet build tests/IntegrationTests.NativeCredentialStore.csproj -c Release
+      - name: List (temp)
+        run: >
+          /home/runner/work/native-credential-store/native-credential-store/tests/bin/Release/net7.0/contentFiles/tools/docker-credential-helper/v0.8.0/docker-credential-pass-v0.8.0.linux-amd64 list
+      - name: Store (temp)
+        run: >
+          echo '{"ServerURL": "http://localhost:900", "Username": "johndoe@gmail.com", "Secret": "foo"}' | /home/runner/work/native-credential-store/native-credential-store/tests/bin/Release/net7.0/contentFiles/tools/docker-credential-helper/v0.8.0/docker-credential-pass-v0.8.0.linux-amd64 store
+      - name: Get (temp)
+        run: >
+          echo "http://localhost:900" | /home/runner/work/native-credential-store/native-credential-store/tests/bin/Release/net7.0/contentFiles/tools/docker-credential-helper/v0.8.0/docker-credential-pass-v0.8.0.linux-amd64 get
+      - name: Erase (temp)
+        run: >
+          echo "http://localhost:900" | /home/runner/work/native-credential-store/native-credential-store/tests/bin/Release/net7.0/contentFiles/tools/docker-credential-helper/v0.8.0/docker-credential-pass-v0.8.0.linux-amd64 erase
       - name: Run tests (Release)
         run: dotnet test -c Release --filter "\"Platform=All|Platform=Linux\""
