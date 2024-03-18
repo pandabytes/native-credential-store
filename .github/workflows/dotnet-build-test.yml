@@ -1,0 +1,26 @@
+name: Reusable workflow to run dotnet build & test
+
+on:
+  workflow_call:
+    inputs:
+      runs_on:
+        required: true
+        type: string
+      test_filter:
+        required: true
+        type: string
+
+jobs:
+  reusable_workflow_job:
+    runs-on: ${{ inputs.runs_on }}
+    steps:
+      - name: Check out branch  
+        uses: actions/checkout@v4
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 7.0.x
+      - name: Build project (Release)
+        run: dotnet build -c Release
+      - name: Run tests (Release)
+        run: dotnet test --no-build -c Release --filter ${{ inputs.test_filter }}

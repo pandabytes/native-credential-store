@@ -47,21 +47,17 @@ internal sealed class NativeCredentialStore : INativeCredentialStore
     }
 
     var commandResult = await ExecuteCommandAsync(Command.Erase, serverURL, cancellationToken);
-    var (exitCode, output, error) = commandResult;
-
-    if (exitCode != 0)
+    if (commandResult.ExitCode != 0)
     {
-      // OSX keychain throws an exception if the serverURL is not found
+      // OSX keychain can throw an exception if the serverURL is not found
       // whereas windows credential doesn't. So to make it idempotent
-      // on OSX we ignore error that has to do with "not found" message
-      var isKeyChain = _credHelperExe.CredentialService == CredentialService.Keychain;
-      var hasNotFoundMessage = output.Contains("not found", StringComparison.OrdinalIgnoreCase) ||
-                               error.Contains("not found", StringComparison.OrdinalIgnoreCase);
-
-      if (isKeyChain && hasNotFoundMessage)
+      // on OSX we ignore error that has to do with "not found" message.
+      // Similarly, "pass" returns "is not in the password store".
+      if (IsCommandResultNotFound(commandResult))
       {
         return;
       }
+
       throw new CommandException(Command.Erase, commandResult);
     }
   }
@@ -115,6 +111,35 @@ internal sealed class NativeCredentialStore : INativeCredentialStore
 
     var output = process.StandardOutput.ReadToEnd().Trim();
     var error = process.StandardError.ReadToEnd().Trim();
-    return new CommandResult(process.ExitCode, output, error);
+    return new CommandResult(process.ExitCode, output, error, ExecutableFilePath);
+  }
+
+  /// <summary>
+  /// Return true if <paramref name="commandResult"/> indicates
+  /// that the underlying credential service fails to find the
+  /// given server URL.
+  /// </summary>
+  /// <param name="commandResult"></param>
+  /// <returns>True if the command result is not found, false otherwise.</returns>
+  /// <exception cref="NotSupportedException"></exception>
+  private bool IsCommandResultNotFound(CommandResult commandResult)
+  {
+    var (_, output, error, _) = commandResult;
+    var credService = _credHelperExe.CredentialService;
+
+    if (credService == CredentialService.Keychain)
+    {
+      return HasNotFound("not found");
+    }
+    if (credService == CredentialService.Pass)
+    {
+      return HasNotFound("not in the password store");
+    }
+
+    throw new NotSupportedException($"Unsupported credential service {credService}.");
+
+    bool HasNotFound(string text) =>
+      output.Contains(text, StringComparison.OrdinalIgnoreCase) ||
+      error.Contains(text, StringComparison.OrdinalIgnoreCase);
   }
 }

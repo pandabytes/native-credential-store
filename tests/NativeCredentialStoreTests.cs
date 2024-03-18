@@ -2,13 +2,14 @@ using Xunit.Abstractions;
 
 namespace IntegrationTests.NativeCredentialStore;
 
+[PlatformTrait(Platform.All)]
 public class NativeCredentialStoreTests : IAsyncLifetime
 {
   private readonly INativeCredentialStore _credentialStore;
 
   private static readonly Credentials Credential = new()
   {
-    ServerURL = "http://localhost",
+    ServerURL = "http://nativecredentialstore.com",
     Username = "foo@email.com",
     Secret = "password"
   };
@@ -116,7 +117,12 @@ public class NativeCredentialStoreTests : IAsyncLifetime
     }
 
     // Act
-    var credentials = await _credentialStore.ListAsync();
+    // This may return additional credentials that were
+    // setup by build environment (like github actions)
+    // so we need to filter those out
+    IDictionary<string, string> credentials = (await _credentialStore.ListAsync())
+      .Where(pair => pair.Key.StartsWith(Credential.ServerURL))
+      .ToDictionary(pair => pair.Key, pair => pair.Value);
 
     // Assert
     Assert.Equal(count, credentials.Count);

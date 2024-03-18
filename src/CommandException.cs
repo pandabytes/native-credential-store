@@ -16,5 +16,6 @@ public class CommandException : Exception
 
   private static string CommandExceptionMessage(Command command, CommandResult commandResult)
     => $"Command \"{command}\" failed with exit code {commandResult.ExitCode}. " +
-       $"Output: \"{commandResult.Output}\". Error: \"{commandResult.Error}\".";
+       $"Output: \"{commandResult.Output}\". Error: \"{commandResult.Error}\". " +
+       $"ExePath: \"{commandResult.ExePath}\"";
 }
