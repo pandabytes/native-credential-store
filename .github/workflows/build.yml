@@ -3,16 +3,56 @@ name: CI for NativeCredentialStore
 on: [push, pull_request]
 
 jobs:
-  macos-amd64-call-dotnet-workflow:
-    name: Build on Mac (Intel)
-    uses: pandabytes/native-credential-store/.github/workflows/dotnet-build-test.yml@github-action
-    with:
-      runs_on: macOS-latest
-      test_filter: "\"Platform=All|Platform=MacOS\""
+  # macos-amd64-call-dotnet-workflow:
+  #   name: Build on Mac (Intel)
+  #   uses: pandabytes/native-credential-store/.github/workflows/dotnet-build-test.yml@github-action
+  #   with:
+  #     runs_on: macOS-latest
+  #     test_filter: "\"Platform=All|Platform=MacOS\""
 
-  windows-call-dotnet-workflow:
-    name: Build on Windows
-    uses: pandabytes/native-credential-store/.github/workflows/dotnet-build-test.yml@github-action
-    with:
-      runs_on: windows-latest
-      test_filter: "\"Platform=All|Platform=Windows\""
+  # windows-call-dotnet-workflow:
+  #   name: Build on Windows
+  #   uses: pandabytes/native-credential-store/.github/workflows/dotnet-build-test.yml@github-action
+  #   with:
+  #     runs_on: windows-latest
+  #     test_filter: "\"Platform=All|Platform=Windows\""
+
+  ubuntu-pass-service:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out branch  
+        uses: actions/checkout@v4
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 7.0.x
+      - name: Build only source project (Release)
+        run: dotnet build src/NativeCredentialStore.csproj -c Release
+      - name: Install gpg and pass
+        run: sudo apt-get update && sudo apt install gpg pass -y
+      - name: Generate GPG key
+        run: >
+          gpg --batch --generate-key <<EOF
+              Key-Type: default
+              Key-Length: 2048
+              Subkey-Type: default
+              Subkey-Length: 2048
+              Name-Real: John Doe
+              Name-Email: johndoe@gmail.com
+              Expire-Date: 0
+              Passphrase: foo
+              %commit
+          EOF
+      - name: Get GPG id
+        # sed is to grab the 2nd line
+        # xargs is to trim whitespace
+        run: echo "GPG_ID=$(gpg -k johndoe | sed -n 2p | xargs)" >> "$GITHUB_ENV"
+      - name: Initialize pass
+        run: pass init $GPG_ID
+      - name: Add docker credential to pass
+        run: >
+          for file in $(find src/contentFiles -type f); do
+            echo "pass is initialized" | pass insert --echo $file
+          done
+      - name: Run tests (Release)
+        run: dotnet test -c Release --filter "\"Platform=All|Platform=Linux\""

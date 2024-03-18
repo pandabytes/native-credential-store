@@ -21,7 +21,7 @@ public class NativeCredentialStoreFactoryTests
   [Fact]
   public void GetCredentialStore_WrongOsArchictectureOnMac_ThrowsException()
   {
-    Assert.Throws<ArgumentException>(() 
+    Assert.Throws<ArgumentException>(()
       => GetCredentialStore(osArchitecture: OsArchitecture.Ppc64le));
   }
 
@@ -37,7 +37,7 @@ public class NativeCredentialStoreFactoryTests
   [Fact]
   public void GetCredentialStore_WrongOsArchictectureOnWindows_ThrowsException()
   {
-    Assert.Throws<ArgumentException>(() 
+    Assert.Throws<ArgumentException>(()
       => GetCredentialStore(osArchitecture: OsArchitecture.Ppc64le));
   }
 
@@ -47,5 +47,16 @@ public class NativeCredentialStoreFactoryTests
   {
     Assert.Throws<ArgumentException>(() 
       => GetCredentialStore(credentialService: CredentialService.Keychain));
+  }
+
+  [PlatformTrait(Platform.Linux)]
+  [Fact]
+  public void GetCredentialStore_WrongCredentialServiceOnLinux_ThrowsException()
+  {
+    Assert.Throws<ArgumentException>(()
+      => GetCredentialStore(credentialService: CredentialService.Keychain));
+
+    Assert.Throws<ArgumentException>(() 
+      => GetCredentialStore(credentialService: CredentialService.WindowsCredential));
   }
 }
