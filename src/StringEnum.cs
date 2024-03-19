@@ -27,12 +27,12 @@ public abstract class StringEnum
       return true;
     }
 
-    if (obj is not StringEnum stringEnum)
+    if (obj is null || obj.GetType() != GetType())
     {
       return false;
     }
 
-    return stringEnum.Value == Value;
+    return ((StringEnum)obj).Value == Value;
   }
 
   /// <inheritdoc/>
