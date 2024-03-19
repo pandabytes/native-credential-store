@@ -16,6 +16,7 @@ To my knowledge this API is only available on Windows, hence the motivation to
 make this library cross-platform.
 
 # Install
+Install from [Nuget](https://www.nuget.org/packages/NativeCredentialStore).
 ```
 dotnet add package NativeCredentialStore --version 0.0.0
 ```
