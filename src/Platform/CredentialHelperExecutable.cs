@@ -2,7 +2,7 @@ using System.Reflection;
 
 namespace NativeCredentialStore.Platform;
 
-public sealed class CredentialHelperExecutable
+internal sealed class CredentialHelperExecutable
 {
   private static readonly string Version = string.Empty;
 

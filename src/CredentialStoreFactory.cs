@@ -3,8 +3,22 @@ using NativeCredentialStore.Platform;
 
 namespace NativeCredentialStore;
 
+/// <summary>
+/// Factory class to get <see cref="INativeCredentialStore"/>.
+/// </summary>
 public static class CredentialStoreFactory
 {
+  /// <summary>
+  /// Attempt to get a native credential service
+  /// based on the device that this library
+  /// runs on. Use the parameters to for finer control.
+  /// </summary>
+  /// <param name="osArchitecture">Manually specify the OS architecture.</param>
+  /// <param name="credentialService">Manually specify the credential service.</param>
+  /// <exception cref="ArgumentException">
+  /// Thrown when this methods fails to get an <see cref="INativeCredentialStore"/> object.
+  /// </exception>
+  /// <returns><see cref="INativeCredentialStore"/> object.</returns>
   public static INativeCredentialStore GetCredentialStore(
     OsArchitecture? osArchitecture = null,
     CredentialService? credentialService = null

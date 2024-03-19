@@ -1,9 +1,14 @@
 namespace NativeCredentialStore;
 
+/// <summary>
+/// Exception raised when a command fails.
+/// </summary>
 public class CommandException : Exception
 {
+  /// <inheritdoc/>
   public CommandException(string message) : base(message) { }
 
+  /// <inheritdoc/>
   public CommandException(string message, Exception inner) : base(message, inner) { }
 
   internal CommandException(Command command, CommandResult commandResult)

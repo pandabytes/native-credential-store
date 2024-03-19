@@ -3,6 +3,14 @@ using System.Text.Json.Serialization;
 
 namespace NativeCredentialStore;
 
+/// <summary>
+/// Record holding information about
+/// the credential that is stored
+/// in the credential store.
+/// </summary>
+/// <remarks>
+/// This mirrors https://pkg.go.dev/github.com/docker/docker-credential-helpers@v0.8.1/credentials#Credentials.
+/// </remarks>
 public sealed record Credentials
 {
   private static readonly JsonSerializerOptions JsonOptions = new()
@@ -17,6 +25,9 @@ public sealed record Credentials
 
   private readonly string _secret = string.Empty;
 
+  /// <summary>
+  /// The server URL.
+  /// </summary>
   public required string ServerURL
   {
     get => _serverURL;
@@ -30,6 +41,9 @@ public sealed record Credentials
     }
   }
 
+  /// <summary>
+  /// The username.
+  /// </summary>
   public required string Username
   {
     get => _username;
@@ -43,6 +57,9 @@ public sealed record Credentials
     }
   }
 
+  /// <summary>
+  /// The secret or password.
+  /// </summary>
   public required string Secret
   {
     get => _secret;
@@ -56,9 +73,14 @@ public sealed record Credentials
     }
   }
 
-  public string ToJson() => JsonSerializer.Serialize(this, JsonOptions);
+  /// <summary>
+  /// Return a JSON represantation of
+  /// this object.
+  /// </summary>
+  /// <returns>JSON string.</returns>
+  internal string ToJson() => JsonSerializer.Serialize(this, JsonOptions);
 
-  public static Credentials GetCredentials(string json)
+  internal static Credentials GetCredentials(string json)
   {
     var credentials = JsonSerializer.Deserialize<Credentials>(json, JsonOptions);
     return credentials ?? throw new ArgumentException(
