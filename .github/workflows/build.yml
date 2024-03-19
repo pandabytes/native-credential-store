@@ -56,3 +56,32 @@ jobs:
           done
       - name: Run tests (Release)
         run: dotnet test -c Release --filter "\"Platform=All|Platform=Linux\""
+
+  release-nuget-package:
+    name: Release nuget package
+    if: startsWith(github.event.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    needs:
+      - macos-amd64-call-dotnet-workflow
+      - windows-call-dotnet-workflow
+      - ubuntu-pass-service
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 7.0.x
+      - name: Verify commit exists in origin/master
+        run: git branch -a --contains $(git rev-parse HEAD) | grep origin/master
+      - name: Set VERSION variable from tag
+        run: echo "VERSION=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
+      - name: Build
+        run: dotnet build -c Release "/p:Version=${VERSION};DownloadAll=true"
+      - name: Pack library
+        run: dotnet pack --no-build -c Release --output . /p:Version=${VERSION}
+      - name: Push
+        run: dotnet nuget push NativeCredentialStore.${VERSION}.nupkg --source $NUGET_SOURCE --api-key $API_KEY
+        env:
+          NUGET_SOURCE: https://api.nuget.org/v3/index.json
+          API_KEY: ${{ secrets.NUGET_API_KEY }}
