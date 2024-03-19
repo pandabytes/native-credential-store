@@ -1,6 +1,6 @@
 using Xunit.Abstractions;
 
-namespace IntegrationTests.NativeCredentialStore;
+namespace Tests.NativeCredentialStore;
 
 [PlatformTrait(Platform.All)]
 public class NativeCredentialStoreTests : IAsyncLifetime

@@ -1,7 +1,7 @@
 using NativeCredentialStore.Platform;
 using static NativeCredentialStore.CredentialStoreFactory;
 
-namespace IntegrationTests.NativeCredentialStore;
+namespace Tests.NativeCredentialStore;
 
 public class NativeCredentialStoreFactoryTests
 {

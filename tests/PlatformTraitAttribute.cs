@@ -1,7 +1,7 @@
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
-namespace IntegrationTests.NativeCredentialStore;
+namespace Tests.NativeCredentialStore;
 
 public enum Platform
 {
@@ -11,7 +11,7 @@ public enum Platform
   Linux,
 }
 
-[TraitDiscoverer("IntegrationTests.NativeCredentialStore.PlatformTraitDiscoverer", "IntegrationTests.NativeCredentialStore")]
+[TraitDiscoverer("Tests.NativeCredentialStore.PlatformTraitDiscoverer", "Tests.NativeCredentialStore")]
 [AttributeUsage(
   AttributeTargets.Method | AttributeTargets.Class,
   AllowMultiple = false
