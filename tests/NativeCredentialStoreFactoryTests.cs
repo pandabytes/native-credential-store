@@ -15,6 +15,7 @@ public class NativeCredentialStoreFactoryTests
     // Assert
     Assert.NotNull(credentialStore);
     Assert.True(File.Exists(credentialStore.ExecutableFilePath));
+    Assert.Contains(credentialStore.Version, credentialStore.ExecutableFilePath);
   }
 
   [PlatformTrait(Platform.MacOS)]

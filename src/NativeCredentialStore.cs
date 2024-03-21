@@ -14,6 +14,8 @@ internal sealed class NativeCredentialStore : INativeCredentialStore
 
   public string ExecutableFilePath => _credHelperExe.ExecutableFilePath;
 
+  public string Version => CredentialHelperExecutable.Version;
+
   public async Task StoreAsync(Credentials credentials, CancellationToken cancellationToken)
   {
     var commandResult = await ExecuteCommandAsync(Command.Store, credentials.ToJson(), cancellationToken);

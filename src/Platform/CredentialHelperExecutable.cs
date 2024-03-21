@@ -4,9 +4,9 @@ namespace NativeCredentialStore.Platform;
 
 internal sealed class CredentialHelperExecutable
 {
-  private static readonly string Version = string.Empty;
+  private static readonly string ExecutableDirPath;
 
-  private static readonly string ExecutableDirPath = string.Empty;
+  public static readonly string Version;
 
   static CredentialHelperExecutable()
   {
