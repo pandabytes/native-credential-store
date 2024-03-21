@@ -16,6 +16,7 @@ To my knowledge this API is only available on Windows, hence the motivation to
 make this library cross-platform.
 
 # Install
+Install from [Nuget](https://www.nuget.org/packages/NativeCredentialStore).
 ```
 dotnet add package NativeCredentialStore --version 0.0.0
 ```
@@ -23,7 +24,7 @@ dotnet add package NativeCredentialStore --version 0.0.0
 # Usage
 To access the native credential storage, you must have a
 `INativeCredentialStore` object and there are 2 ways to get it:
-1. Via the .NET Dependency Injection container - using `AddCredentialStore)()`
+1. Via the .NET Dependency Injection container - using `AddCredentialStore()`
     ```cs
     using Microsoft.Extensions.DependencyInjection;
     using NativeCredentialStore;
@@ -71,7 +72,7 @@ await credStoreService.EraseAsync("http://nativecredentialstore.com");
 credentials = await credStoreService.ListAsync();
 ```
 
-# How it works?
+# How does it works?
 During compilation, this project determines which executable files to download
 based on the OS platform. Then during runtime, it calls those executable
 to perform the commands (`get`, `erase`, `store`, and `list`).
@@ -90,4 +91,4 @@ folder of the consumer project.
 > [!NOTE]
 >
 > For now users on Mac AMD64 will have trouble running the executable because
-> the `docker-credential-helpers` team has not fixed this signing this [issue](https://github.com/docker/docker-credential-helpers/issues/246#issuecomment-1690831962) yet.
+> the `docker-credential-helpers` team has not fixed this signing [issue](https://github.com/docker/docker-credential-helpers/issues/246#issuecomment-1690831962) yet.
