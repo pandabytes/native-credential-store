@@ -19,7 +19,6 @@ public static class DependencyInjection
   /// <exception cref="ArgumentException">
   /// Thrown when this methods fails to get an <see cref="INativeCredentialStore"/> object.
   /// </exception>
-  /// <returns><see cref="INativeCredentialStore"/> object.</returns>
   public static IServiceCollection AddCredentialStore(
     this IServiceCollection services,
     OsArchitecture? osArchitecture = null,
