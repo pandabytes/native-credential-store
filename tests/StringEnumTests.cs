@@ -39,6 +39,6 @@ public class StringEnumTests
   [InlineData(100)]
   [InlineData(null)]
   [Theory]
-  public void Equals_DifferentObjectType_ReturnsFalse(object obj)
+  public void Equals_DifferentObjectType_ReturnsFalse(object? obj)
     => Assert.False(CarColor.Red.Equals(obj));
 }
