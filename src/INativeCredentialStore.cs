@@ -1,22 +1,10 @@
 namespace NativeCredentialStore;
 
 /// <summary>
-/// Interface to interact with the docker
-/// credential helper executable. This mirrors
-/// the interface https://pkg.go.dev/github.com/docker/docker-credential-helpers/client
+/// Interface to interact with native credential storage system.
 /// </summary>
 public interface INativeCredentialStore
 {
-  /// <summary>
-  /// Path to where the docker-credential-helper executable lives.
-  /// </summary>
-  string ExecutableFilePath { get; }
-
-  /// <summary>
-  /// The version of the executable.
-  /// </summary>
-  string Version { get; }
-
   /// <summary>
   /// Store <paramref name="credentials"/> in the native credential store.
   /// This method can also be used to update an existing <paramref name="credentials"/>.

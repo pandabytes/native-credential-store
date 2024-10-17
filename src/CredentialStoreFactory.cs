@@ -1,5 +1,4 @@
 using System.Runtime.InteropServices;
-using NativeCredentialStore.Platform;
 
 namespace NativeCredentialStore;
 
@@ -27,8 +26,8 @@ public static class CredentialStoreFactory
     var osPlatform = GetOsPlatform();
     osArchitecture ??= GetOsArchitecture();
     credentialService ??= GetCredentialService(osPlatform);
-    var credentialHelper = new CredentialHelperExecutable(credentialService, osPlatform, osArchitecture);
-    return new NativeCredentialStore(credentialHelper);
+    var credentialHelper = new DockerCredentialHelperExecutable(credentialService, osPlatform, osArchitecture);
+    return new DockerCredentialHelperImplementation(credentialHelper);
   }
 
   private static OsPlatform GetOsPlatform()

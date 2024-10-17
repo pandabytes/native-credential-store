@@ -1,20 +1,19 @@
 using System.Text.Json;
-using NativeCredentialStore.Platform;
 
-namespace NativeCredentialStore;
+namespace NativeCredentialStore.DockerCredentialHelper;
 
-internal sealed class NativeCredentialStore : INativeCredentialStore
+internal sealed class DockerCredentialHelperImplementation : IDockerCredentialHelper
 {
-  private readonly CredentialHelperExecutable _credHelperExe;
+  private readonly DockerCredentialHelperExecutable _credHelperExe;
 
-  public NativeCredentialStore(CredentialHelperExecutable credentialHelperExe)
+  public DockerCredentialHelperImplementation(DockerCredentialHelperExecutable credentialHelperExe)
   {
     _credHelperExe = credentialHelperExe;
   }
 
   public string ExecutableFilePath => _credHelperExe.ExecutableFilePath;
 
-  public string Version => CredentialHelperExecutable.Version;
+  public string Version => DockerCredentialHelperExecutable.Version;
 
   public async Task StoreAsync(Credentials credentials, CancellationToken cancellationToken)
   {

@@ -1,16 +1,16 @@
 using System.Reflection;
 
-namespace NativeCredentialStore.Platform;
+namespace NativeCredentialStore.DockerCredentialHelper;
 
-internal sealed class CredentialHelperExecutable
+internal sealed class DockerCredentialHelperExecutable
 {
   private static readonly string ExecutableDirPath;
 
   public static readonly string Version;
 
-  static CredentialHelperExecutable()
+  static DockerCredentialHelperExecutable()
   {
-    var assembly = Assembly.GetAssembly(typeof(CredentialHelperExecutable));
+    var assembly = Assembly.GetAssembly(typeof(DockerCredentialHelperExecutable));
     var dockerCredAttribute = assembly?.GetCustomAttribute<DockerCredentialHelperMetadataAttribute>();
     Version = dockerCredAttribute?.Version ?? 
       throw new InvalidOperationException("Could not get version from project.");
@@ -41,7 +41,7 @@ internal sealed class CredentialHelperExecutable
   public string ExecutableFilePath 
     => Path.Join(ExecutableDirPath, ExecutableName);
 
-  public CredentialHelperExecutable(
+  public DockerCredentialHelperExecutable(
     CredentialService credentialService,
     OsPlatform osPlatform,
     OsArchitecture osArchitecture
