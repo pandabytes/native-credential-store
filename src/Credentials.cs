@@ -8,9 +8,6 @@ namespace NativeCredentialStore;
 /// the credential that is stored
 /// in the credential store.
 /// </summary>
-/// <remarks>
-/// This mirrors https://pkg.go.dev/github.com/docker/docker-credential-helpers@v0.8.1/credentials#Credentials.
-/// </remarks>
 public sealed record Credentials
 {
   private static readonly JsonSerializerOptions JsonOptions = new()

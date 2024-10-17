@@ -1,4 +1,4 @@
-namespace NativeCredentialStore;
+namespace NativeCredentialStore.DockerCredentialHelper;
 
 /// <summary>
 /// Exception raised when a command fails.

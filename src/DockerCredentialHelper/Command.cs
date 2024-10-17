@@ -1,4 +1,4 @@
-namespace NativeCredentialStore;
+namespace NativeCredentialStore.DockerCredentialHelper;
 
 internal record CommandResult(int ExitCode, string Output, string Error, string ExePath);
 
