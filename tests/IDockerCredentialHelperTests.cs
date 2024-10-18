@@ -3,9 +3,9 @@ using Xunit.Abstractions;
 namespace Tests.NativeCredentialStore;
 
 [PlatformTrait(Platform.All)]
-public class NativeCredentialStoreTests : IAsyncLifetime
+public class IDockerCredentialHelperTests : IAsyncLifetime
 {
-  private readonly INativeCredentialStore _credentialStore;
+  private readonly IDockerCredentialHelper _dockerCredentialStore;
 
   private static readonly Credentials Credential = new()
   {
@@ -16,25 +16,25 @@ public class NativeCredentialStoreTests : IAsyncLifetime
 
   private readonly ITestOutputHelper _output;
 
-  public NativeCredentialStoreTests(ITestOutputHelper output)
+  public IDockerCredentialHelperTests(ITestOutputHelper output)
   {
     _output = output;
 
     var serviceProvider = new ServiceCollection()
-      .AddCredentialStore()
+      .AddDockerCredentialHelper()
       .BuildServiceProvider();
 
-    _credentialStore = serviceProvider.GetRequiredService<INativeCredentialStore>();
+    _dockerCredentialStore = serviceProvider.GetRequiredService<IDockerCredentialHelper>();
   }
 
   public Task InitializeAsync() => Task.CompletedTask;
 
   public async Task DisposeAsync()
   {
-    var credentials = await _credentialStore.ListAsync();
+    var credentials = await _dockerCredentialStore.ListAsync();
     foreach (var serverUrl in credentials.Keys)
     {
-      await _credentialStore.EraseAsync(serverUrl);
+      await _dockerCredentialStore.EraseAsync(serverUrl);
     }
   }
 
@@ -45,10 +45,10 @@ public class NativeCredentialStoreTests : IAsyncLifetime
   public async Task StoreAsync_StoreCredential_CredentialIsStored()
   {
     // Act
-    await _credentialStore.StoreAsync(Credential);
+    await _dockerCredentialStore.StoreAsync(Credential);
 
     // Assert
-    var storedCredentials = await _credentialStore.GetAsync(Credential.ServerURL);
+    var storedCredentials = await _dockerCredentialStore.GetAsync(Credential.ServerURL);
     Assert.Equal(Credential, storedCredentials);
   }
 
@@ -56,44 +56,44 @@ public class NativeCredentialStoreTests : IAsyncLifetime
   public async Task StoreAsync_UpdateCredential_CredentialIsUpdated()
   {
     // Arrange
-    await _credentialStore.StoreAsync(Credential);
+    await _dockerCredentialStore.StoreAsync(Credential);
 
     // Act
     var updateCredential = Credential with { Username = "bar@email.com" };
-    await _credentialStore.StoreAsync(updateCredential);
+    await _dockerCredentialStore.StoreAsync(updateCredential);
 
     // Assert
-    var storedCredentials = await _credentialStore.GetAsync(Credential.ServerURL);
+    var storedCredentials = await _dockerCredentialStore.GetAsync(Credential.ServerURL);
     Assert.Equal(updateCredential, storedCredentials);
   }
 
   [Fact]
   public async Task GetAsync_EmptyServerUrl_ThrowsException()
-    => await Assert.ThrowsAsync<ArgumentException>(() => _credentialStore.GetAsync(string.Empty));
+    => await Assert.ThrowsAsync<ArgumentException>(() => _dockerCredentialStore.GetAsync(string.Empty));
 
   [Fact]
   public async Task GetAsync_ServerUrlNotExist_ThrowsException()
-    => await Assert.ThrowsAsync<CommandException>(() => _credentialStore.GetAsync("foo"));
+    => await Assert.ThrowsAsync<CommandException>(() => _dockerCredentialStore.GetAsync("foo"));
 
   [Fact]
   public async Task EraseAsync_EmptyServerUrl_ThrowsException()
-    => await Assert.ThrowsAsync<ArgumentException>(() => _credentialStore.EraseAsync(string.Empty));
+    => await Assert.ThrowsAsync<ArgumentException>(() => _dockerCredentialStore.EraseAsync(string.Empty));
 
   [Fact]
   public async Task EraseAsync_ServerUrlNotExist_NothingHappens()
-    => await _credentialStore.EraseAsync("foo");
+    => await _dockerCredentialStore.EraseAsync("foo");
 
   [Fact]
   public async Task EraseAsync_ServerUrlExists_CredentialIsRemoved()
   {
     // Arrange
-    await _credentialStore.StoreAsync(Credential);
+    await _dockerCredentialStore.StoreAsync(Credential);
 
     // Act
-    await _credentialStore.EraseAsync(Credential.ServerURL);
+    await _dockerCredentialStore.EraseAsync(Credential.ServerURL);
 
     // Assert
-    var credentials = await _credentialStore.ListAsync();
+    var credentials = await _dockerCredentialStore.ListAsync();
     Assert.Empty(credentials);
   }
 
@@ -112,7 +112,7 @@ public class NativeCredentialStoreTests : IAsyncLifetime
       var username = Credential.Username + i.ToString();
       var newCredential = Credential with { ServerURL = serverUrl, Username = username };
 
-      await _credentialStore.StoreAsync(newCredential);
+      await _dockerCredentialStore.StoreAsync(newCredential);
       credentialObjs.Add(newCredential);
     }
 
@@ -120,7 +120,7 @@ public class NativeCredentialStoreTests : IAsyncLifetime
     // This may return additional credentials that were
     // setup by build environment (like github actions)
     // so we need to filter those out
-    IDictionary<string, string> credentials = (await _credentialStore.ListAsync())
+    IDictionary<string, string> credentials = (await _dockerCredentialStore.ListAsync())
       .Where(pair => pair.Key.StartsWith(Credential.ServerURL))
       .ToDictionary(pair => pair.Key, pair => pair.Value);
 
