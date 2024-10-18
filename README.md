@@ -23,53 +23,54 @@ dotnet add package NativeCredentialStore --version 0.0.0
 
 # Usage
 To access the native credential storage, you must have a
-`INativeCredentialStore` object and there are 2 ways to get it:
-1. Via the .NET Dependency Injection container - using `AddCredentialStore()`
+`IDockerCredentialHelper` object and there are 2 ways to get it:
+1. Via the .NET Dependency Injection container - using `AddDockerCredentialHelper()`
     ```cs
     using Microsoft.Extensions.DependencyInjection;
-    using NativeCredentialStore;
+    using NativeCredentialStore.DockerCredentialHelper;
 
     var serviceProvider = new ServiceCollection()
-      .AddCredentialStore()
+      .AddDockerCredentialHelper()
       .BuildServiceProvider();
 
-    var credStoreService = serviceProvider.GetRequiredService<INativeCredentialStore>();
+    var dockerCredentialHelper = serviceProvider.GetRequiredService<IDockerCredentialHelper>();
     ```
-1. Via the factory class `CredentialStoreFactory.GetCredentialStore(...)`
+1. Via the factory class `CredentialStoreFactory.GetDockerCredentialHelper(...)`
     ```cs
     using static NativeCredentialStore.CredentialStoreFactory;
 
-    var credStoreService = GetCredentialStore();
+    var dockerCredentialHelper = GetDockerCredentialHelper();
     ```
 
 ## Examples
 ```cs
+using NativeCredentialStore.DockerCredentialHelper;
 using static NativeCredentialStore.CredentialStoreFactory;
 
-var credStoreService = GetCredentialStore();
+var dockerCredentialHelper = GetDockerCredentialHelper();
 
-var credential = new Credential
+var credentials = new Credentials
 {
   ServerURL = "http://nativecredentialstore.com",
   Username = "foo@email.com",
   Secret = "password"
 };
 
-// No return - can be used to update existing Credential
-await credStoreService.StoreAsync(credential);
+// No return - can be used to update existing Credentials
+await dockerCredentialHelper.StoreAsync(credentials);
 
-// Return the same Credential object we stored
-var storedCredential = await credStoreService.GetAsync("http://nativecredentialstore.com");
+// Return the same Credentials object we stored
+var storedCredentials = await dockerCredentialHelper.GetAsync("http://nativecredentialstore.com");
 
 // Return a dictionary looking like this:
 // {"http://nativecredentialstore.com": "foo@email.com"}
-var credentials = await credStoreService.ListAsync();
+var credentialsDict = await dockerCredentialHelper.ListAsync();
 
-// Erase/remove the credential - this is idempontent
-await credStoreService.EraseAsync("http://nativecredentialstore.com");
+// Erase/remove the credentials - this is idempontent
+await dockerCredentialHelper.EraseAsync("http://nativecredentialstore.com");
 
-// Return an empty dictionary if there's no credential
-credentials = await credStoreService.ListAsync();
+// Return an empty dictionary if there's no credentials
+credentialsDict = await dockerCredentialHelper.ListAsync();
 ```
 
 # How does it works?
@@ -87,8 +88,3 @@ When generating a nuget package, it will download all executables (for differnt 
 and pack all those files inside the nuget package (under `contentFiles` folder). When a consumer project
 has a reference to the `NativeCredentialStore` library, all the executables will be copied to the `bin`
 folder of the consumer project.
-
-> [!NOTE]
->
-> For now users on Mac AMD64 will have trouble running the executable because
-> the `docker-credential-helpers` team has not fixed this signing [issue](https://github.com/docker/docker-credential-helpers/issues/246#issuecomment-1690831962) yet.
