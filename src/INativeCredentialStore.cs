@@ -3,7 +3,7 @@ namespace NativeCredentialStore;
 /// <summary>
 /// Interface to interact with native credential storage system.
 /// </summary>
-public interface INativeCredentialStore<TCredential> where TCredential : Credentials
+public interface INativeCredentialStore<TCredential> where TCredential : BaseCredentials
 {
   /// <summary>
   /// Store <paramref name="credentials"/> in the native credential store.

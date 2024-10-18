@@ -1,14 +1,13 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace NativeCredentialStore;
+namespace NativeCredentialStore.DockerCredentialHelper;
 
 /// <summary>
-/// Record holding information about
-/// the credential that is stored
-/// in the credential store.
+/// This attempts to match with
+/// https://pkg.go.dev/github.com/docker/docker-credential-helpers@v0.8.2/credentials#Credentials.
 /// </summary>
-public record Credentials
+public record Credentials : BaseCredentials
 {
   private static readonly JsonSerializerOptions JsonOptions = new()
   {
@@ -78,7 +77,7 @@ public record Credentials
   internal string ToJson() => JsonSerializer.Serialize(this, JsonOptions);
 
   internal static TCredential GetCredentials<TCredential>(string json)
-    where TCredential : Credentials
+    where TCredential : BaseCredentials
   {
     var credentials = JsonSerializer.Deserialize<TCredential>(json, JsonOptions);
     return credentials ?? throw new ArgumentException(

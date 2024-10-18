@@ -5,10 +5,6 @@ namespace NativeCredentialStore.DockerCredentialHelper;
 /// credential helper executable. This mirrors
 /// the interface https://pkg.go.dev/github.com/docker/docker-credential-helpers/client
 /// </summary>
-/// <remarks>
-/// The <see cref="Credentials"/> attempts to
-/// match with https://pkg.go.dev/github.com/docker/docker-credential-helpers@v0.8.1/credentials#Credentials.
-/// </remarks>
 public interface IDockerCredentialHelper : INativeCredentialStore<Credentials>
 {
   /// <summary>
