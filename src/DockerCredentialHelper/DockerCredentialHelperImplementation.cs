@@ -37,7 +37,7 @@ internal sealed class DockerCredentialHelperImplementation : IDockerCredentialHe
       throw new CommandException(Command.Get, commandResult);
     }
 
-    return Credentials.GetCredentials<Credentials>(commandResult.Output);
+    return Credentials.GetCredentials(commandResult.Output);
   }
 
   public async Task EraseAsync(string serverURL, CancellationToken cancellationToken)

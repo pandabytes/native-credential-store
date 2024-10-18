@@ -7,7 +7,7 @@ namespace NativeCredentialStore.DockerCredentialHelper;
 /// This attempts to match with
 /// https://pkg.go.dev/github.com/docker/docker-credential-helpers@v0.8.2/credentials#Credentials.
 /// </summary>
-public record Credentials : BaseCredentials
+public sealed record Credentials
 {
   private static readonly JsonSerializerOptions JsonOptions = new()
   {
@@ -76,12 +76,11 @@ public record Credentials : BaseCredentials
   /// <returns>JSON string.</returns>
   internal string ToJson() => JsonSerializer.Serialize(this, JsonOptions);
 
-  internal static TCredential GetCredentials<TCredential>(string json)
-    where TCredential : BaseCredentials
+  internal static Credentials GetCredentials(string json)
   {
-    var credentials = JsonSerializer.Deserialize<TCredential>(json, JsonOptions);
+    var credentials = JsonSerializer.Deserialize<Credentials>(json, JsonOptions);
     return credentials ?? throw new ArgumentException(
-      $"Failed to deserialize JSON to valid {typeof(TCredential).FullName}."
+      $"Failed to deserialize JSON to valid {typeof(Credentials).FullName}."
     );
   }
 }
