@@ -7,6 +7,9 @@ namespace NativeCredentialStore.DockerCredentialHelper;
 /// This attempts to match with
 /// https://pkg.go.dev/github.com/docker/docker-credential-helpers@v0.8.2/credentials#Credentials.
 /// </summary>
+/// <remarks>
+/// This mirrors https://pkg.go.dev/github.com/docker/docker-credential-helpers@v0.8.2/credentials#Credentials.
+/// </remarks>
 public sealed record Credentials
 {
   private static readonly JsonSerializerOptions JsonOptions = new()
