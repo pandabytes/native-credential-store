@@ -3,7 +3,7 @@ namespace NativeCredentialStore;
 /// <summary>
 /// Interface to interact with native credential storage system.
 /// </summary>
-public interface INativeCredentialStore
+public interface INativeCredentialStore<TCredential> where TCredential : Credentials
 {
   /// <summary>
   /// Store <paramref name="credentials"/> in the native credential store.
@@ -12,7 +12,7 @@ public interface INativeCredentialStore
   /// <param name="credentials">Crednetials to be stored.</param>
   /// <param name="cancellationToken">Cancel token.</param>
   /// <exception cref="CommandException"/>
-  Task StoreAsync(Credentials credentials, CancellationToken cancellationToken = default);
+  Task StoreAsync(TCredential credentials, CancellationToken cancellationToken = default);
 
   /// <summary>
   /// Get the credentials given <paramref name="serverURL"/>.
@@ -24,7 +24,7 @@ public interface INativeCredentialStore
   /// <exception cref="ArgumentException"/>
   /// <exception cref="CommandException"/>
   /// <returns>Credentials object.</returns>
-  Task<Credentials> GetAsync(string serverURL, CancellationToken cancellationToken = default);
+  Task<TCredential> GetAsync(string serverURL, CancellationToken cancellationToken = default);
 
   /// <summary>
   /// Erase the credentials given <paramref name="serverURL"/>.

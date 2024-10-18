@@ -9,7 +9,7 @@ namespace NativeCredentialStore.DockerCredentialHelper;
 /// The <see cref="Credentials"/> attempts to
 /// match with https://pkg.go.dev/github.com/docker/docker-credential-helpers@v0.8.1/credentials#Credentials.
 /// </remarks>
-public interface IDockerCredentialHelper : INativeCredentialStore
+public interface IDockerCredentialHelper : INativeCredentialStore<Credentials>
 {
   /// <summary>
   /// Path to where the docker-credential-helper executable lives.

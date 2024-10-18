@@ -8,7 +8,7 @@ namespace NativeCredentialStore;
 /// the credential that is stored
 /// in the credential store.
 /// </summary>
-public sealed record Credentials
+public record Credentials
 {
   private static readonly JsonSerializerOptions JsonOptions = new()
   {
@@ -77,11 +77,12 @@ public sealed record Credentials
   /// <returns>JSON string.</returns>
   internal string ToJson() => JsonSerializer.Serialize(this, JsonOptions);
 
-  internal static Credentials GetCredentials(string json)
+  internal static TCredential GetCredentials<TCredential>(string json)
+    where TCredential : Credentials
   {
-    var credentials = JsonSerializer.Deserialize<Credentials>(json, JsonOptions);
+    var credentials = JsonSerializer.Deserialize<TCredential>(json, JsonOptions);
     return credentials ?? throw new ArgumentException(
-      $"Failed to deserialize JSON to valid {nameof(Credentials)}"
+      $"Failed to deserialize JSON to valid {typeof(TCredential).FullName}."
     );
   }
 }

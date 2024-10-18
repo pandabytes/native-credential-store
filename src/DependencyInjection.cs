@@ -8,7 +8,7 @@ namespace NativeCredentialStore;
 public static class DependencyInjection
 {
   /// <summary>
-  /// Inject <see cref="INativeCredentialStore"/> to DI
+  /// Inject <see cref="IDockerCredentialHelper"/> to DI
   /// container based on the device that this library
   /// runs on. Use the parameters for finer control.
   /// </summary>
@@ -16,12 +16,12 @@ public static class DependencyInjection
   /// <param name="osArchitecture">Manually specify the OS architecture.</param>
   /// <param name="credentialService">Manually specify the credential service.</param>
   /// <exception cref="ArgumentException">
-  /// Thrown when this methods fails to get an <see cref="INativeCredentialStore"/> object.
+  /// Thrown when this methods fails to get an <see cref="IDockerCredentialHelper"/> object.
   /// </exception>
-  public static IServiceCollection AddCredentialStore(
+  public static IServiceCollection AddDockerCredentialHelper(
     this IServiceCollection services,
     OsArchitecture? osArchitecture = null,
     CredentialService? credentialService = null
   )
-    => services.AddTransient(_ => CredentialStoreFactory.GetCredentialStore(osArchitecture, credentialService));
+    => services.AddTransient(_ => CredentialStoreFactory.GetDockerCredentialHelper(osArchitecture, credentialService));
 }
