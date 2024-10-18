@@ -1,21 +1,23 @@
 using System.Text.Json;
-using NativeCredentialStore.Platform;
 
-namespace NativeCredentialStore;
+namespace NativeCredentialStore.DockerCredentialHelper;
 
-internal sealed class NativeCredentialStore : INativeCredentialStore
+internal sealed class DockerCredentialHelperImplementation : IDockerCredentialHelper
 {
-  private readonly CredentialHelperExecutable _credHelperExe;
+  private readonly DockerCredentialHelperExecutable _credHelperExe;
 
-  public NativeCredentialStore(CredentialHelperExecutable credentialHelperExe)
+  public DockerCredentialHelperImplementation(DockerCredentialHelperExecutable credentialHelperExe)
   {
     _credHelperExe = credentialHelperExe;
   }
 
+  /// <inheritdoc/>
   public string ExecutableFilePath => _credHelperExe.ExecutableFilePath;
 
-  public string Version => CredentialHelperExecutable.Version;
+  /// <inheritdoc/>
+  public string Version => DockerCredentialHelperExecutable.Version;
 
+  /// <inheritdoc/>
   public async Task StoreAsync(Credentials credentials, CancellationToken cancellationToken)
   {
     var commandResult = await ExecuteCommandAsync(Command.Store, credentials.ToJson(), cancellationToken);
@@ -25,6 +27,7 @@ internal sealed class NativeCredentialStore : INativeCredentialStore
     }
   }
 
+  /// <inheritdoc/>
   public async Task<Credentials> GetAsync(string serverURL, CancellationToken cancellationToken)
   {
     if (string.IsNullOrWhiteSpace(serverURL))
@@ -41,6 +44,7 @@ internal sealed class NativeCredentialStore : INativeCredentialStore
     return Credentials.GetCredentials(commandResult.Output);
   }
 
+  /// <inheritdoc/>
   public async Task EraseAsync(string serverURL, CancellationToken cancellationToken)
   {
     if (string.IsNullOrWhiteSpace(serverURL))
@@ -64,6 +68,7 @@ internal sealed class NativeCredentialStore : INativeCredentialStore
     }
   }
 
+  /// <inheritdoc/>
   public async Task<IDictionary<string, string>> ListAsync(CancellationToken cancellationToken)
   {
     var commandResult = await ExecuteCommandAsync(Command.List, cancellationToken: cancellationToken);

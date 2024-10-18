@@ -1,4 +1,3 @@
-using NativeCredentialStore.Platform;
 using static NativeCredentialStore.CredentialStoreFactory;
 
 namespace Tests.NativeCredentialStore;
@@ -7,57 +6,61 @@ public class NativeCredentialStoreFactoryTests
 {
   [PlatformTrait(Platform.All)]
   [Fact]
-  public void GetCredentialStore_DefaultArguments_ReturnsCredentialStore()
+  public void GetDockerCredentialHelper_DefaultArguments_ReturnsCredentialStore()
   {
+    // Arrange
+    const string currentDockerCredHelperVersion = "v0.8.2";
+
     // Act
-    var credentialStore = GetCredentialStore();
+    var credentialStore = GetDockerCredentialHelper();
 
     // Assert
     Assert.NotNull(credentialStore);
     Assert.True(File.Exists(credentialStore.ExecutableFilePath));
     Assert.Contains(credentialStore.Version, credentialStore.ExecutableFilePath);
+    Assert.Equal(currentDockerCredHelperVersion, credentialStore.Version);
   }
 
   [PlatformTrait(Platform.MacOS)]
   [Fact]
-  public void GetCredentialStore_WrongOsArchictectureOnMac_ThrowsException()
+  public void GetDockerCredentialHelper_WrongOsArchictectureOnMac_ThrowsException()
   {
     Assert.Throws<ArgumentException>(()
-      => GetCredentialStore(osArchitecture: OsArchitecture.Ppc64le));
+      => GetDockerCredentialHelper(osArchitecture: OsArchitecture.Ppc64le));
   }
 
   [PlatformTrait(Platform.MacOS)]
   [Fact]
-  public void GetCredentialStore_WrongCredentialServiceOnMac_ThrowsException()
+  public void GetDockerCredentialHelper_WrongCredentialServiceOnMac_ThrowsException()
   {
     Assert.Throws<ArgumentException>(() 
-      => GetCredentialStore(credentialService: CredentialService.WindowsCredential));
+      => GetDockerCredentialHelper(credentialService: CredentialService.WindowsCredential));
   }
 
   [PlatformTrait(Platform.Windows)]
   [Fact]
-  public void GetCredentialStore_WrongOsArchictectureOnWindows_ThrowsException()
+  public void GetDockerCredentialHelper_WrongOsArchictectureOnWindows_ThrowsException()
   {
     Assert.Throws<ArgumentException>(()
-      => GetCredentialStore(osArchitecture: OsArchitecture.Ppc64le));
+      => GetDockerCredentialHelper(osArchitecture: OsArchitecture.Ppc64le));
   }
 
   [PlatformTrait(Platform.Windows)]
   [Fact]
-  public void GetCredentialStore_WrongCredentialServiceOnWindows_ThrowsException()
+  public void GetDockerCredentialHelper_WrongCredentialServiceOnWindows_ThrowsException()
   {
     Assert.Throws<ArgumentException>(() 
-      => GetCredentialStore(credentialService: CredentialService.Keychain));
+      => GetDockerCredentialHelper(credentialService: CredentialService.Keychain));
   }
 
   [PlatformTrait(Platform.Linux)]
   [Fact]
-  public void GetCredentialStore_WrongCredentialServiceOnLinux_ThrowsException()
+  public void GetDockerCredentialHelper_WrongCredentialServiceOnLinux_ThrowsException()
   {
     Assert.Throws<ArgumentException>(()
-      => GetCredentialStore(credentialService: CredentialService.Keychain));
+      => GetDockerCredentialHelper(credentialService: CredentialService.Keychain));
 
     Assert.Throws<ArgumentException>(() 
-      => GetCredentialStore(credentialService: CredentialService.WindowsCredential));
+      => GetDockerCredentialHelper(credentialService: CredentialService.WindowsCredential));
   }
 }

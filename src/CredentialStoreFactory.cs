@@ -1,10 +1,9 @@
 using System.Runtime.InteropServices;
-using NativeCredentialStore.Platform;
 
 namespace NativeCredentialStore;
 
 /// <summary>
-/// Factory class to get <see cref="INativeCredentialStore"/>.
+/// Factory class to get credential store.
 /// </summary>
 public static class CredentialStoreFactory
 {
@@ -16,10 +15,10 @@ public static class CredentialStoreFactory
   /// <param name="osArchitecture">Manually specify the OS architecture.</param>
   /// <param name="credentialService">Manually specify the credential service.</param>
   /// <exception cref="ArgumentException">
-  /// Thrown when this methods fails to get an <see cref="INativeCredentialStore"/> object.
+  /// Thrown when this methods fails to get an <see cref="IDockerCredentialHelper"/> object.
   /// </exception>
-  /// <returns><see cref="INativeCredentialStore"/> object.</returns>
-  public static INativeCredentialStore GetCredentialStore(
+  /// <returns><see cref="IDockerCredentialHelper"/> object.</returns>
+  public static IDockerCredentialHelper GetDockerCredentialHelper(
     OsArchitecture? osArchitecture = null,
     CredentialService? credentialService = null
   )
@@ -27,8 +26,8 @@ public static class CredentialStoreFactory
     var osPlatform = GetOsPlatform();
     osArchitecture ??= GetOsArchitecture();
     credentialService ??= GetCredentialService(osPlatform);
-    var credentialHelper = new CredentialHelperExecutable(credentialService, osPlatform, osArchitecture);
-    return new NativeCredentialStore(credentialHelper);
+    var credentialHelper = new DockerCredentialHelperExecutable(credentialService, osPlatform, osArchitecture);
+    return new DockerCredentialHelperImplementation(credentialHelper);
   }
 
   private static OsPlatform GetOsPlatform()

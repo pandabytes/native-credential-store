@@ -1,4 +1,4 @@
-namespace NativeCredentialStore.Platform;
+namespace NativeCredentialStore.DockerCredentialHelper.Platform;
 
 /// <summary>
 /// Provide an enum list of available OS architecture.

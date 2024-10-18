@@ -1,15 +1,14 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace NativeCredentialStore;
+namespace NativeCredentialStore.DockerCredentialHelper;
 
 /// <summary>
-/// Record holding information about
-/// the credential that is stored
-/// in the credential store.
+/// This attempts to match with
+/// https://pkg.go.dev/github.com/docker/docker-credential-helpers@v0.8.2/credentials#Credentials.
 /// </summary>
 /// <remarks>
-/// This mirrors https://pkg.go.dev/github.com/docker/docker-credential-helpers@v0.8.1/credentials#Credentials.
+/// This mirrors https://pkg.go.dev/github.com/docker/docker-credential-helpers@v0.8.2/credentials#Credentials.
 /// </remarks>
 public sealed record Credentials
 {
@@ -84,7 +83,7 @@ public sealed record Credentials
   {
     var credentials = JsonSerializer.Deserialize<Credentials>(json, JsonOptions);
     return credentials ?? throw new ArgumentException(
-      $"Failed to deserialize JSON to valid {nameof(Credentials)}"
+      $"Failed to deserialize JSON to valid {typeof(Credentials).FullName}."
     );
   }
 }
