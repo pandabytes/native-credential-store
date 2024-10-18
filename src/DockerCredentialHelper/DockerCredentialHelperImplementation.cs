@@ -11,10 +11,13 @@ internal sealed class DockerCredentialHelperImplementation : IDockerCredentialHe
     _credHelperExe = credentialHelperExe;
   }
 
+  /// <inheritdoc/>
   public string ExecutableFilePath => _credHelperExe.ExecutableFilePath;
 
+  /// <inheritdoc/>
   public string Version => DockerCredentialHelperExecutable.Version;
 
+  /// <inheritdoc/>
   public async Task StoreAsync(Credentials credentials, CancellationToken cancellationToken)
   {
     var commandResult = await ExecuteCommandAsync(Command.Store, credentials.ToJson(), cancellationToken);
@@ -24,6 +27,7 @@ internal sealed class DockerCredentialHelperImplementation : IDockerCredentialHe
     }
   }
 
+  /// <inheritdoc/>
   public async Task<Credentials> GetAsync(string serverURL, CancellationToken cancellationToken)
   {
     if (string.IsNullOrWhiteSpace(serverURL))
@@ -40,6 +44,7 @@ internal sealed class DockerCredentialHelperImplementation : IDockerCredentialHe
     return Credentials.GetCredentials(commandResult.Output);
   }
 
+  /// <inheritdoc/>
   public async Task EraseAsync(string serverURL, CancellationToken cancellationToken)
   {
     if (string.IsNullOrWhiteSpace(serverURL))
@@ -63,6 +68,7 @@ internal sealed class DockerCredentialHelperImplementation : IDockerCredentialHe
     }
   }
 
+  /// <inheritdoc/>
   public async Task<IDictionary<string, string>> ListAsync(CancellationToken cancellationToken)
   {
     var commandResult = await ExecuteCommandAsync(Command.List, cancellationToken: cancellationToken);
