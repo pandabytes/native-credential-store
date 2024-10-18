@@ -39,7 +39,7 @@ public class IDockerCredentialHelperTests : IAsyncLifetime
   }
 
   /// <summary>
-  /// This also tests <see cref="INativeCredentialStore.GetAsync(string, CancellationToken)"/>.
+  /// This also tests <see cref="IDockerCredentialHelper.GetAsync(string, CancellationToken)"/>.
   /// </summary>
   [Fact]
   public async Task StoreAsync_StoreCredential_CredentialIsStored()
